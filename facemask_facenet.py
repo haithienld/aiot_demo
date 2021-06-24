@@ -319,7 +319,7 @@ def main():
     labels = load_labels(args.labels)
     
 
-    interpreter_embedding_extractor = make_interpreter('models/facenet_tommy_kr_tpu.tflite', device=':0') #facenet_tommy_kr_tpu.tflite efficientnet-edgetpu-M_quant_embedding_extractor_edgetpu
+    interpreter_embedding_extractor = make_interpreter('models/facenet_tommy_kr_tpu.tflite', device=':0') #facenet_tommy_kr_tpu.tflite efficientnet-edgetpu-M_quant_embedding_extractor_edgetpu FaceNet_128
     interpreter_embedding_extractor.allocate_tensors()
     if(args.create_encodings_file == True):
         create_encodings(args.dataset, args.encodings_file,interpreter,labels, interpreter_embedding_extractor)

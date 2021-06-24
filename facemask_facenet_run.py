@@ -39,6 +39,7 @@ from tflite_runtime.interpreter import load_delegate
 import contextlib
 import sys
 import time
+from datetime import datetime
 from imutils import paths
 import pickle
 
@@ -261,7 +262,7 @@ def main():
     interpreter.allocate_tensors()
     labels = load_labels(args.labels)
     
-
+    out = cv2.VideoWriter(str(datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'))+'.mp4',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640,480))
     interpreter_embedding_extractor = make_interpreter('models/facenet_tommy_kr_tpu.tflite', device=':0') #facenet_tommy_kr_tpu.tflite efficientnet-edgetpu-M_quant_embedding_extractor_edgetpu
     interpreter_embedding_extractor.allocate_tensors()
     #print(retrained_interpreter_size)
@@ -279,6 +280,7 @@ def main():
         if not ret:
             break
         cv2_im = frame
+        out.write(cv2_im)
         start = time.perf_counter()
         cv2_im,boxes = det_and_display(cv2_im, interpreter, labels, 0.5)
         cv2_im = cv2.cvtColor(cv2_im, cv2.COLOR_RGB2BGR)
