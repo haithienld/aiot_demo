@@ -309,7 +309,7 @@ def main():
     parser.add_argument("-ce", "--create_encodings_file", type=bool, default=False,
                         help='classifier score threshold')
     parser.add_argument("-d", "--dataset", help="path to input dataset directory.  If there are multiple directories all subdirectories will be encoded",default='dataset')
-    parser.add_argument("-e", "--encodings_file", help="path to serialized pickle file of facial encodings.  If the file exists, new encodings will be added.  Otherwise the file will be created", default='encodings/facial_encodings_facenet.pkl')
+    parser.add_argument("-e", "--encodings_file", help="path to serialized pickle file of facial encodings.  If the file exists, new encodings will be added.  Otherwise the file will be created", default= 'encodings/facial_encodings_efficientnet.pkl')
     args = parser.parse_args()
     
     print('Loading {} with {} labels.'.format(args.model, args.labels))
@@ -319,7 +319,7 @@ def main():
     labels = load_labels(args.labels)
     
 
-    interpreter_embedding_extractor = make_interpreter('models/facenet_tommy_kr_tpu.tflite', device=':0') #facenet_tommy_kr_tpu.tflite efficientnet-edgetpu-M_quant_embedding_extractor_edgetpu
+    interpreter_embedding_extractor = make_interpreter('models/efficientnet-edgetpu-M_quant_embedding_extractor_edgetpu.tflite', device=':0') #facenet_tommy_kr_tpu.tflite efficientnet-edgetpu-M_quant_embedding_extractor_edgetpu
     interpreter_embedding_extractor.allocate_tensors()
     if(args.create_encodings_file == True):
         create_encodings(args.dataset, args.encodings_file,interpreter,labels, interpreter_embedding_extractor)
@@ -383,7 +383,7 @@ def main():
         print('%.1fms' % (inference_time * 1000))
         for embedding in embeddings:
             # attempt to match each face in the input image to our known encodings
-            matches = compare_faces(data['encodings'], embedding, tolerance=10)
+            matches = compare_faces(data['encodings'], embedding, tolerance=15)
             name = "Unknown"
 
             # check to see if we have found any matches
@@ -456,7 +456,7 @@ def extract_embeddings(image, interpreter_embedding_extractor,boxes):
         box = image[x1:x2,y2:y1]
         images.append(box)
         cv2.imshow('box', box)
-        box = resize_expand_img(box,160)
+        box = resize_expand_img(box,240)
         common.set_input(interpreter_embedding_extractor, box)
         interpreter_embedding_extractor.invoke()
         inference_time = time.perf_counter() - start
@@ -489,7 +489,7 @@ def extract_serial(interpreter,retrained_interpreter_size, boxes,image,width,hei
         box = image[x1:x2,y2:y1]
         images.append(box)
         cv2.imshow('box', box)
-        box = resize_expand_img(box,160)
+        box = resize_expand_img(box,240)
         interpreter.set_tensor(input_details[0]['index'],box)
         #interpreter.invoke()
         feature = interpreter.get_tensor(output_details[0]['index'])[0]
