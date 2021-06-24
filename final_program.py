@@ -32,6 +32,7 @@ import cv2
 from imutils.video import VideoStream
 import imutils
 import time
+from datetime import datetime
 
 #===============================================
 
@@ -277,7 +278,6 @@ while cap.isOpened():
     if not ret:
         break
     cv2_im = frame
-    
     out.write(cv2_im) 
     start = time.perf_counter()
     cv2_im,boxes = det_and_display(cv2_im, interpreter, labels, 0.5)
