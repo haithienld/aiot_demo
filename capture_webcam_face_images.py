@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # loop over frames from the video file stream
     for i in range(0, int(args['count'])):
         count_down = 3
-        print(f"Grab image: {i}")
+        #print(f"Grab image: {i}")
         count_down_time = time.time()
         frame = vs.read()
         show_frame(frame, str(count_down), f"Picture {i+1} of {args['count']}")
@@ -44,5 +44,5 @@ if __name__ == '__main__':
                 else:
                     new_image_file = data_path / f"{args['name']}_{i}.png"
                     cv2.imwrite(str(new_image_file.absolute()), frame)
-                    print(new_image_file)
+                    #print(new_image_file)
                     break
