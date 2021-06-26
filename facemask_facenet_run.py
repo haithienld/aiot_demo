@@ -280,7 +280,7 @@ def main():
         if not ret:
             break
         cv2_im = frame
-        out.write(cv2_im)
+        out.write(frame)
         start = time.perf_counter()
         cv2_im,boxes = det_and_display(cv2_im, interpreter, labels, 0.5)
         cv2_im = cv2.cvtColor(cv2_im, cv2.COLOR_RGB2BGR)

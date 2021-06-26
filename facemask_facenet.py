@@ -343,7 +343,7 @@ def main():
         cv2_im = cv2.cvtColor(cv2_im, cv2.COLOR_RGB2BGR)
         #print(boxes)
         image = frame[:, :, 0:3]
-        #features, filtered_boxes, local, id_box, images = extract_serial(retrained_interpreter,retrained_interpreter_size,boxes,image,width,height) #
+        impo#features, filtered_boxes, local, id_box, images = extract_serial(retrained_interpreter,retrained_interpreter_size,boxes,image,width,height) #
         embeddings = extract_embeddings(image, interpreter_embedding_extractor,boxes)
         names = []
         '''
@@ -461,6 +461,11 @@ def extract_embeddings(image, interpreter_embedding_extractor,boxes):
         interpreter_embedding_extractor.invoke()
         inference_time = time.perf_counter() - start
         embeddings[idx, :] = classify.get_scores(interpreter_embedding_extractor)
+        '''
+        embeddings[idx, :] = interpreter.tensor(output_details['index'])().flatten()
+        scale, zeros = output_details['quantization']
+        embeddings[idx, :] = (embeddings[idx, :]-zeros)*scale
+        '''
         print('%.1fms' % (inference_time * 1000))
         print("Duong dan",embeddings)
     return embeddings
